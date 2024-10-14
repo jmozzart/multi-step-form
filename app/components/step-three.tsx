@@ -2,7 +2,7 @@ import { useFormContext } from "react-hook-form";
 import { PriceRangeRadio } from "./price-range-radio";
 import type { FormSchema } from "./form";
 
-export function StepThree() {
+export function StepThreeX() {
 	const { register, watch } = useFormContext<FormSchema>();
 
 	const priceRangeSelected = watch("projectBudgetRange");

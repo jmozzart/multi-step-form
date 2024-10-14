@@ -10,27 +10,38 @@ export function StepOne() {
 	return (
 		<>
 			<div className="flex gap-7">
+
 				<Input
-					label="Name"
+					label="Company"
 					register={methods.register}
-					name="name"
+					name="companyName"
 					errors={methods.formState.errors}
-					icon={User}
-					placeholder="John Carter"
+					icon={Building}
+					placeholder="Company name"
 				/>
 
 				<Input
+					label="Website"
+					register={methods.register}
+					name="companyWebsite"
+					errors={methods.formState.errors}
+					icon={User}
+					placeholder="website.com"
+					type="url"
+				/>
+
+				{/* <Input
 					label="Email"
 					register={methods.register}
 					name="email"
 					errors={methods.formState.errors}
 					icon={Mail}
 					placeholder="Email address"
-				/>
+				/> */}
 			</div>
 
 			<div className="flex gap-7">
-				<Input
+				{/* <Input
 					label="Phone Number"
 					register={methods.register}
 					name="phone"
@@ -42,15 +53,26 @@ export function StepOne() {
 					maxLength={16}
 					placeholder="(123) 456 - 7890"
 				/>
-
-				<Input
-					label="Company"
+ */}
+				<Input 
+					label="Address"
 					register={methods.register}
-					name="companyName"
+					name="address"
 					errors={methods.formState.errors}
 					icon={Building}
-					placeholder="Company name"
+					placeholder="1234 Elm St"
 				/>
+
+				<Input
+					label="Industry"
+					register={methods.register}
+					name="industry"
+					errors={methods.formState.errors}
+					icon={Building}
+					placeholder="Industry"
+				/>
+
+			
 			</div>
 		</>
 	);

@@ -5,10 +5,10 @@ import type { FormSchema } from "./form";
 
 type RadioProps = {
 	isChecked: boolean;
-	title: FormSchema["interestedService"] | FormSchema["projectBudgetRange"];
+	title: FormSchema["purposeOfTheLoan"] | FormSchema["projectBudgetRange"];
 	src: string;
 	register: UseFormRegister<FormSchema>;
-	name: "interestedService" | "projectBudgetRange";
+	name: "purposeOfTheLoan" | "projectBudgetRange";
 };
 
 export function Radio({ isChecked, title, src, register, name }: RadioProps) {
@@ -33,7 +33,7 @@ export function Radio({ isChecked, title, src, register, name }: RadioProps) {
 					<Image
 						className="drop-shadow-[0_4px_6px_rgba(79,70,229,0.5)] size-[2.25rem]"
 						src={src}
-						alt={title}
+						alt={title ?? ""}
 						width={0}
 						height={0}
 					/>

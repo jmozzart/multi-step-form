@@ -24,7 +24,7 @@ export function Step({ id, isLast = false, currentStep }: StepProps) {
 			</div>
 
 			{!isLast && (
-				<div className="min-w-24 h-[6px] rounded-[40px] bg-zinc-200">
+				<div className="min-w-14 h-[6px] rounded-[40px] bg-zinc-200">
 					<div
 						className={twMerge(
 							"h-[6px] rounded-[40px] bg-indigo-600 transition-all duration-500",

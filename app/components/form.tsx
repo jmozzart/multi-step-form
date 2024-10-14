@@ -1,42 +1,63 @@
 "use client";
 
-import { z } from "zod";
+import { set, z } from "zod";
 import { Step } from "./step";
 import { useState } from "react";
 import { type FieldName, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StepOne } from "./step-one";
-import { StepTwo } from "./step-two";
-import { StepThree } from "./step-three";
+//import { StepTwo } from "./step-two";
+import { StepTwo } from "./step-two-v2";
+import { StepThree } from "./step-three-v2";
+import { StepFour } from "./step-four";
+import { ConditionalComponent, ConditionalComponentProps } from "./step-conditional";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
+import test from "node:test";
+
+interface ConditionalComponentMappedProps {
+	purpose: string;
+	setOfQuestions: ConditionalComponentProps[];
+}
 
 const steps = [
 	{
 		id: 1,
-		title: "Contact details",
-		description:
-			"Please enter your contact details to receive a quote for your project.",
+		title: "Business details",
+		//description:			"Please enter your contact details to receive a quote for your project.",
 		component: <StepOne />,
-		fields: ["name", "email", "phone", "companyName"],
+		fields: ["companyName", "companyWebsite", "industry", "address"],
 	},
 	{
 		id: 2,
-		title: "Our services",
-		description: "Please select which service you are interested in.",
+		title: "Loan details",
+		//description: "Please select which service you are interested in.",
 		component: <StepTwo />,
-		fields: ["interestedService"],
+		fields: ["existingDebt", "proposedAdditionalDebt", "estimatedInterestRate"],
 	},
 	{
 		id: 3,
-		title: "What’s your project budget?",
-		description: "Please select the project budget range you have in mind.",
+		title: "Summarise the loan request",
+		//description: "Please select which service you are interested in.",
 		component: <StepThree />,
-		fields: ["projectBudgetRange"],
+		fields: ["loanRequestSummary"],
 	},
 	{
 		id: 4,
-		title: "Submit your quote requet",
+		title: "Purpose of the loan",
+		//description: "Please select the project budget range you have in mind.",
+		component: <StepFour/>,
+		fields: ["purposeOfTheLoan"],
+	},
+	{
+			id: 5,
+			title: "Conditional step",
+			//component: <ConditionalComponent questionLabel="dfsdf" questionName="test" questionPlaceholder="fdjdsljfl" />,
+			fields: ["assetType", "assetValue", "priorFinancing", "assetValuationDetails", "assetLife", "purchasePrice", "LTV", "intendedUse", "anticipatedRentalIncome", "maintenanceRequirements", "currentWorkingCapitalNeeds", "currentWorkingCapitalNeedsDetails", "accountsReceivablePayableDetails", "cashConversionCycleDuration", "workingCapitalUsagePlan", "currentTermsOfDebt", "improvementsOrChanges", "purposeOfRefinancing", "penaltiesOrFees", "securityOrCollateral"],
+	},
+	{
+		id: 6,
+		title: "Submit your quote request",
 		description:
 			"Please review all the information you previously typed in the past steps, and if all is okay, submit your message to receive a project quote in 24 - 48 hours.",
 		isLast: true,
@@ -48,29 +69,165 @@ const formSchema = z.object({
 	email: z.string().email("Invalid email"),
 	phone: z.string().min(10, "Phone number is required"),
 	companyName: z.string().min(1, "Company name is required"),
-	interestedService: z.enum([
-		"Development",
-		"Web Design",
-		"Marketing",
+	companyWebsite: z.string().url("Invalid URL"),
+	industry: z.string(),
+	address: z.string().min(1, "Address is required"),
+	existingDebt: z.coerce.number(),
+	proposedAdditionalDebt: z.coerce.number(),
+	estimatedInterestRate: z.coerce.number(),
+	loanRequestSummary: z.string(),
+	test: z.string(),
+	//percentage: z.number().percentage(),
+	purposeOfTheLoan: z.enum([
+		"Acquisition finance",
+		"Asset finance",
+		"Property purchase",
+		"Working capital",
+		"Annual review - Existing customer",
+		"Refinance from another bank - New to bank customer",
+		"Syndication",
+		"Growth capital",
+		"Refinance existing bank debt",
 		"Other",
 	]),
-	projectBudgetRange: z.enum([
-		"5000-10000",
-		"10000-20000",
-		"20000-50000",
-		"50000+",
-	]),
+	assetType: z.string().optional(),
+		assetValue: z.string().optional(),
+		priorFinancing: z.string().optional(),
+		assetValuationDetails: z.string().optional(),
+		assetLife: z.string().optional(),
+		purchasePrice: z.string().optional(),
+		LTV: z.string().optional(),
+		intendedUse: z.string().optional(),
+		anticipatedRentalIncome: z.string().optional(),
+		maintenanceRequirements: z.string().optional(),
+		currentWorkingCapitalNeeds: z.string().optional(),
+		currentWorkingCapitalNeedsDetails: z.string().optional(),
+		accountsReceivablePayableDetails: z.string().optional(),
+		cashConversionCycleDuration: z.string().optional(),
+		workingCapitalUsagePlan: z.string().optional(),
+		currentTermsOfDebt: z.string().optional(),
+		improvementsOrChanges: z.string().optional(),
+		purposeOfRefinancing: z.string().optional(),
+		penaltiesOrFees: z.string().optional(),
+		securityOrCollateral: z.string().optional(),
+		projectBudgetRange: z.string().optional()
+
 });
+
+const conditionalQuestions:ConditionalComponentMappedProps[] = [
+	{
+		purpose: "Asset finance",
+		setOfQuestions: [
+			{
+				questionName: "assetType",
+				questionLabel: "What type of asset(s) are you looking to finance?"
+			},
+			{
+				questionName: "assetValue",
+				questionLabel: "What is the purchase price of the asset(s)?"
+			},
+			{
+				questionName: "priorFinancing",
+				questionLabel: "Do you have any prior financing on similar assets?"
+			},
+			{
+				questionName: "assetValuationDetails",
+				questionLabel: "Can you provide asset valuation details (if applicable)?"
+			},
+			{
+				questionName: "assetLife",
+				questionLabel: "What is the life of the asset: How long do you intend to use the asset, and what is its expected useful life?"
+			}
+		]	
+	},
+	{
+		purpose: "Property purchase",
+		setOfQuestions: [
+			{
+				questionName: "purchasePrice",
+				questionLabel: "What is the purchase price of the commercial property?"
+			},
+			{
+				questionName: "LTV",
+				questionLabel: "What is the expected loan-to-value (LTV) ratio?"
+			},
+			{
+				questionName: "intendedUse",
+				questionLabel: "What will be the intended use of the property (e.g., investment, owner-occupied)?"
+			},
+			{
+				questionName: "anticipatedRentalIncome",
+				questionLabel: "What is the anticipated rental income, and do you have tenants secured?"
+			},
+			{
+				questionName: "maintenanceRequirements",
+				questionLabel: "Are there any expected maintenance or capital expenditure requirements?"
+			}
+		]
+	},
+	{
+		purpose: "Working capital",
+		setOfQuestions: [
+			{
+				questionName: "currentWorkingCapitalNeeds",
+				questionLabel: "What is the purpose of the working capital loan (e.g., inventory, receivables)?"
+			},
+			{
+				questionName: "currentWorkingCapitalNeedsDetails",
+				questionLabel: "What are your current working capital needs?"
+			},
+			{
+				questionName: "accountsReceivablePayableDetails",
+				questionLabel: "Can you provide details on your accounts receivable and accounts payable cycles?"
+			},
+			{
+				questionName: "cashConversionCycleDuration",
+				questionLabel: "What is the average duration of your cash conversion cycle?"
+			},
+			{
+				questionName: "workingCapitalUsagePlan",
+				questionLabel: "How do you plan to use the working capital to support business growth?"
+			}
+		]
+	},
+	{
+		purpose: "Refinance existing bank debt",
+		setOfQuestions: [
+			{
+				questionName: "currentTermsOfDebt",
+				questionLabel: "What are the current terms of the debt (interest rate, maturity)?"
+			},
+			{
+				questionName: "improvementsOrChanges",
+				questionLabel: "What improvements or changes are you seeking in the refinance (e.g., lower rates, extended terms)?"
+			},
+			{
+				questionName: "purposeOfRefinancing",
+				questionLabel: "What is the purpose of refinancing (e.g., reduce costs, improve cash flow)?"
+			},
+			{
+				questionName: "penaltiesOrFees",
+				questionLabel: "Are there any penalties or fees for early repayment of the existing loan?"
+			},
+			{
+				questionName: "securityOrCollateral",
+				questionLabel: "What is the security or collateral provided under the current facility?"
+			}
+		]
+	}
+]
 
 export type FormSchema = z.infer<typeof formSchema>;
 
 export function Form() {
 	const [currentStep, setCurrentStep] = useState(0);
+	const [conditionalComponent, setConditionalComponent] = useState<ConditionalComponentProps[]>([]);
 
 	const methods = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
 		mode: "onBlur",
 	});
+
 
 	async function onSubmit(data: FormSchema) {
 		console.log(data);
@@ -93,7 +250,30 @@ export function Form() {
 			if (currentStep < steps.length - 1) {
 				setCurrentStep((step) => step + 1);
 			}
+
+	
 		}
+
+		const values = methods.getValues();
+		const selectedPurpose = values.purposeOfTheLoan;
+		console.log("values", values);
+		console.log("selectedPurpose", selectedPurpose);
+	
+		const purposeToQuestionsMap: { [key: string]: number } = {
+			"Asset finance": 0,
+			"Property purchase": 1,
+			"Working capital": 2,
+			"Refinance existing bank debt": 3,
+		};
+	
+		const index = purposeToQuestionsMap[selectedPurpose];
+		if (index !== undefined) {
+			setConditionalComponent(conditionalQuestions[index].setOfQuestions);
+		} /* else {
+			setCurrentStep((step) => step + 1);
+		} */
+
+	
 	}
 
 	function previousStep() {
@@ -101,6 +281,10 @@ export function Form() {
 			setCurrentStep((step) => step - 1);
 		}
 	}
+
+	/* function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
+        setSelectedValue(event.target.value);
+    } */
 
 	return (
 		<div className="mt-6 flex flex-col items-center justify-center gap-3 p-8 text-center">
@@ -113,9 +297,9 @@ export function Form() {
 			</p>
 
 			<FormProvider {...methods}>
-				<form className="flex flex-col gap-7 max-w-[698px] h-[738px]">
+				<form className="flex flex-col gap-7 max-w-[698px] h-auto">
 					<section className="h-full mt-8 flex flex-col gap-4 shadow-sm border-zinc-200 border-[1px] rounded-[34px] pl-12 pt-8 pr-14 pb-20">
-						<div className="flex items-center gap-[18px] px-8 pb-8 border-b-[1px] border-zinc-200">
+						<div className="flex items-center gap-auto px-8 pb-8 border-b-[1px] border-zinc-200">
 							{steps.map((step) => (
 								<Step
 									key={step.id}
@@ -129,10 +313,10 @@ export function Form() {
 						<div
 							className={twMerge(
 								"mt-8 text-left",
-								currentStep === 3 && "flex flex-col items-center gap-2",
+								currentStep === 5 && "flex flex-col items-center gap-2",
 							)}
 						>
-							{currentStep === 3 && (
+							{currentStep === 5 && (
 								<Image
 									src="/finish.svg"
 									alt="Finish"
@@ -148,13 +332,13 @@ export function Form() {
 							<p
 								className={twMerge(
 									"mt-2 text-zinc-500 max-w-[500px] text-left",
-									currentStep === 3 && "text-center",
+									currentStep === 5 && "text-center",
 								)}
 							>
 								{steps[currentStep].description}
 							</p>
 
-							{currentStep === 3 && (
+							{currentStep === 5 && (
 								<button
 									type="button"
 									onClick={nextStep}
@@ -164,9 +348,20 @@ export function Form() {
 								</button>
 							)}
 
-							<div className="flex flex-col gap-11 mt-10">
+							{currentStep === 4 ? (
+
+								<div className="flex flex-col gap-11 mt-10">
+								<ConditionalComponent items={conditionalComponent} />
+								</div>
+					
+							) : 
+
+								<div className="flex flex-col gap-11 mt-10">
 								{steps[currentStep].component}
-							</div>
+								</div>
+							 }
+
+					
 						</div>
 					</section>
 
