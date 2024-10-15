@@ -26,3 +26,11 @@ body {
     text-wrap: balance;
   }
 }
+
+.uc-credits {
+  display: none
+}
+
+uc-copyright {
+  display: none !important;
+}

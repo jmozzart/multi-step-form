@@ -1,12 +1,11 @@
 "use client";
 
-import { set, z } from "zod";
+import { z } from "zod";
 import { Step } from "./step";
 import { useState } from "react";
 import { type FieldName, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StepOne } from "./step-one";
-//import { StepTwo } from "./step-two";
 import { StepTwo } from "./step-two-v2";
 import { StepThree } from "./step-three-v2";
 import { StepFour } from "./step-four";
@@ -14,6 +13,7 @@ import { ConditionalComponent, ConditionalComponentProps } from "./step-conditio
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
 import {UploadcareUploader} from "./upload-button";
+import axios from "axios";
 
 interface ConditionalComponentMappedProps {
 	purpose: string;
@@ -62,9 +62,10 @@ const steps = [
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
 		component: <UploadcareUploader />,
-		fields: ["uploadedFiles"],
+		fields: ["uploadedFiles", "fileUploads"],
 
 	},
+	
 	{
 		id: 7,
 		title: "Submit your quote request",
@@ -120,7 +121,12 @@ const formSchema = z.object({
 	penaltiesOrFees: z.string().optional(),
 	securityOrCollateral: z.string().optional(),
 	projectBudgetRange: z.string().optional(),
-	uploadedFiles: z.string().array().optional()
+	uploadedFiles: z.string().array().optional(),
+ 	fileUploads: z.array(z.object({
+		fileName: z.string(),
+		fileUrl: z.string(),
+		uuid: z.string()
+	}))
 
 });
 
@@ -243,6 +249,16 @@ export function Form() {
 		console.log(data);
 		methods.reset();
 	}
+	
+	async function finalSubmit() {
+		const data = methods.getValues();
+
+		// axios post request
+		console.log("final data", data);
+		await axios.post("https://eogsyrgf2tjbnoi.m.pipedream.net", data);
+		methods.reset();
+		
+	}
 
 	async function nextStep() {
 		const fields = steps[currentStep].fields;
@@ -353,7 +369,7 @@ export function Form() {
 							{currentStep === 6 && (
 								<button
 									type="button"
-									onClick={nextStep}
+									onClick={finalSubmit}
 									className="mt-4 px-10 py-3 bg-indigo-600 text-white rounded-[66px] hover:bg-indigo-700 transition-colors duration-100"
 								>
 									Submit
