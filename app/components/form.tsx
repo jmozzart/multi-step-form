@@ -87,7 +87,6 @@ const formSchema = z.object({
 	proposedAdditionalDebt: z.coerce.number(),
 	estimatedInterestRate: z.coerce.number(),
 	loanRequestSummary: z.string(),
-	test: z.string(),
 	purposeOfTheLoan: z.enum([
 		"Acquisition finance",
 		"Asset finance",
