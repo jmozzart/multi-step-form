@@ -17,7 +17,9 @@ export const UploadcareUploader = () => {
   const [fileUploads, setFileUploads] = useState<any[]>([]);
 //const filesUploaded = getValues("fileUploads");
 //setFileUploads(filesUploaded);
+
     //setValue("uploadButtonHit", false);
+
 
   const handleFileUpload = (file: OutputFileEntry) => {
     setFiles((prevFiles) => [...prevFiles, file]);
@@ -76,19 +78,20 @@ export const UploadcareUploader = () => {
               }
         ]}
         />
-      <div className="img-gallery">
-
-       
-            
-{/* 
-       {files.map((file) => (
-         <img
-           key={file.uuid}
-           src={file.cdnUrl as string}
-           alt="Preview"
-           className="img-preview"
-         />
-       ))} */}
+      <div className="mt-6">
+        {getValues("fileUploads") ? (
+          <ul className="list-disc list-inside">
+            {getValues("fileUploads").map((file: any) => (
+              <li key={file.uuid}>
+                <a href={file.fileUrl as string} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">
+                  {file.fileName}
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          ""
+        )}
       </div>
     </section>
   );

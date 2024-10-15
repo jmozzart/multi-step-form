@@ -51,10 +51,10 @@ const steps = [
 		fields: ["purposeOfTheLoan"],
 	},
 	{
-			id: 5,
-			title: "Additional questions",
-			//component: <ConditionalComponent questionLabel="dfsdf" questionName="test" questionPlaceholder="fdjdsljfl" />,
-			fields: ["assetType", "assetValue", "priorFinancing", "assetValuationDetails", "assetLife", "purchasePrice", "LTV", "intendedUse", "anticipatedRentalIncome", "maintenanceRequirements", "currentWorkingCapitalNeeds", "currentWorkingCapitalNeedsDetails", "accountsReceivablePayableDetails", "cashConversionCycleDuration", "workingCapitalUsagePlan", "currentTermsOfDebt", "improvementsOrChanges", "purposeOfRefinancing", "penaltiesOrFees", "securityOrCollateral"],
+		id: 5,
+		title: "Additional questions",
+		//component: <ConditionalComponent questionLabel="dfsdf" questionName="test" questionPlaceholder="fdjdsljfl" />,
+		fields: ["assetType", "assetValue", "priorFinancing", "assetValuationDetails", "assetLife", "purchasePrice", "LTV", "intendedUse", "anticipatedRentalIncome", "maintenanceRequirements", "currentWorkingCapitalNeeds", "currentWorkingCapitalNeedsDetails", "accountsReceivablePayableDetails", "cashConversionCycleDuration", "workingCapitalUsagePlan", "currentTermsOfDebt", "improvementsOrChanges", "purposeOfRefinancing", "penaltiesOrFees", "securityOrCollateral"],
 	},
 	{
 		id: 6,
