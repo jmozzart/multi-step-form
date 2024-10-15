@@ -13,7 +13,7 @@ import { StepFour } from "./step-four";
 import { ConditionalComponent, ConditionalComponentProps } from "./step-conditional";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import test from "node:test";
+import {UploadcareUploader} from "./upload-button";
 
 interface ConditionalComponentMappedProps {
 	purpose: string;
@@ -61,7 +61,8 @@ const steps = [
 		title: "Upload your documents",
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
-		fields: ["test"],
+		component: <UploadcareUploader />,
+		fields: ["uploadedFiles"],
 
 	},
 	{
@@ -118,7 +119,8 @@ const formSchema = z.object({
 	purposeOfRefinancing: z.string().optional(),
 	penaltiesOrFees: z.string().optional(),
 	securityOrCollateral: z.string().optional(),
-	projectBudgetRange: z.string().optional()
+	projectBudgetRange: z.string().optional(),
+	uploadedFiles: z.string().array().optional()
 
 });
 
@@ -244,9 +246,12 @@ export function Form() {
 
 	async function nextStep() {
 		const fields = steps[currentStep].fields;
-		const isValid = await methods.trigger(fields as FieldName<FormSchema>[], {
+		const isValid = await methods.trigger(fields as (keyof FormSchema)[], {
 			shouldFocus: true,
 		});
+	/* 	const isValid = await methods.trigger(fields as FieldName<FormSchema>[], {
+			shouldFocus: true,
+		}); */
 
 		if (!isValid) return;
 
@@ -297,15 +302,14 @@ export function Form() {
 	return (
 		<div className="mt-6 flex flex-col items-center justify-center gap-3 p-8 text-center">
 			<h1 className="text-4xl font-bold text-indigo-950">
-				Get a project quote
+				Assess your company's creditworthiness
 			</h1>
 			<p className="max-w-xl text-zinc-400 text-lg">
-				Please fill the form below to receive a quote for your project. Feel
-				free to add as much detail as needed.
+				Fill out the form below to access your company's creditworthiness.
 			</p>
 
 			<FormProvider {...methods}>
-				<form className="flex flex-col gap-7 max-w-[698px] h-auto">
+				<form className="flex flex-col gap-7 max-w-[698px] h-auto min-h-[800px]">
 					<section className="h-full mt-8 flex flex-col gap-4 shadow-sm border-zinc-200 border-[1px] rounded-[34px] pl-12 pt-8 pr-14 pb-20">
 						<div className="flex items-center gap-auto px-8 pb-8 border-b-[1px] border-zinc-200">
 							{steps.map((step) => (
@@ -355,6 +359,7 @@ export function Form() {
 									Submit
 								</button>
 							)}
+					
 
 							{currentStep === 4 ? (
 
