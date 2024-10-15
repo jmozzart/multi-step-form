@@ -17,6 +17,7 @@ export const UploadcareUploader = () => {
   const [fileUploads, setFileUploads] = useState<any[]>([]);
 //const filesUploaded = getValues("fileUploads");
 //setFileUploads(filesUploaded);
+    //setValue("uploadButtonHit", false);
 
   const handleFileUpload = (file: OutputFileEntry) => {
     setFiles((prevFiles) => [...prevFiles, file]);
@@ -46,6 +47,7 @@ export const UploadcareUploader = () => {
   const handleChanges = () => {
 
     //console.log("filesUploaded",filesUploaded);
+    //setValue("uploadButtonHit", undefined);
   }
 
   

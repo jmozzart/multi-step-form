@@ -121,12 +121,12 @@ const formSchema = z.object({
 	penaltiesOrFees: z.string().optional(),
 	securityOrCollateral: z.string().optional(),
 	projectBudgetRange: z.string().optional(),
-	uploadedFiles: z.string().array().optional(),
+	//uploadButtonHit: z.boolean(),
  	fileUploads: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string(),
 		uuid: z.string()
-	}))
+	})).optional()
 
 });
 
