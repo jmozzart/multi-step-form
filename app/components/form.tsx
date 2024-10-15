@@ -24,39 +24,48 @@ const steps = [
 	{
 		id: 1,
 		title: "Business details",
-		//description:			"Please enter your contact details to receive a quote for your project.",
+		description: "Please provide details about your business.",
 		component: <StepOne />,
 		fields: ["companyName", "companyWebsite", "industry", "address"],
 	},
 	{
 		id: 2,
 		title: "Loan details",
-		//description: "Please select which service you are interested in.",
+		description:
+			"Please provide details about your existing debt and the proposed additional debt.",
 		component: <StepTwo />,
 		fields: ["existingDebt", "proposedAdditionalDebt", "estimatedInterestRate"],
 	},
 	{
 		id: 3,
 		title: "Summarise the loan request",
-		//description: "Please select which service you are interested in.",
+		description: "Please provide a summary of your loan request.",
 		component: <StepThree />,
 		fields: ["loanRequestSummary"],
 	},
 	{
 		id: 4,
 		title: "Purpose of the loan",
-		//description: "Please select the project budget range you have in mind.",
+		description: "Please select the purpose of the loan.",
 		component: <StepFour/>,
 		fields: ["purposeOfTheLoan"],
 	},
 	{
 			id: 5,
-			title: "Conditional step",
+			title: "Additional questions",
 			//component: <ConditionalComponent questionLabel="dfsdf" questionName="test" questionPlaceholder="fdjdsljfl" />,
 			fields: ["assetType", "assetValue", "priorFinancing", "assetValuationDetails", "assetLife", "purchasePrice", "LTV", "intendedUse", "anticipatedRentalIncome", "maintenanceRequirements", "currentWorkingCapitalNeeds", "currentWorkingCapitalNeedsDetails", "accountsReceivablePayableDetails", "cashConversionCycleDuration", "workingCapitalUsagePlan", "currentTermsOfDebt", "improvementsOrChanges", "purposeOfRefinancing", "penaltiesOrFees", "securityOrCollateral"],
 	},
 	{
 		id: 6,
+		title: "Upload your documents",
+		description:
+			"Please upload any relevant documents that will help us understand your project better.",
+		fields: ["test"],
+
+	},
+	{
+		id: 7,
 		title: "Submit your quote request",
 		description:
 			"Please review all the information you previously typed in the past steps, and if all is okay, submit your message to receive a project quote in 24 - 48 hours.",
@@ -77,7 +86,6 @@ const formSchema = z.object({
 	estimatedInterestRate: z.coerce.number(),
 	loanRequestSummary: z.string(),
 	test: z.string(),
-	//percentage: z.number().percentage(),
 	purposeOfTheLoan: z.enum([
 		"Acquisition finance",
 		"Asset finance",
@@ -91,26 +99,26 @@ const formSchema = z.object({
 		"Other",
 	]),
 	assetType: z.string().optional(),
-		assetValue: z.string().optional(),
-		priorFinancing: z.string().optional(),
-		assetValuationDetails: z.string().optional(),
-		assetLife: z.string().optional(),
-		purchasePrice: z.string().optional(),
-		LTV: z.string().optional(),
-		intendedUse: z.string().optional(),
-		anticipatedRentalIncome: z.string().optional(),
-		maintenanceRequirements: z.string().optional(),
-		currentWorkingCapitalNeeds: z.string().optional(),
-		currentWorkingCapitalNeedsDetails: z.string().optional(),
-		accountsReceivablePayableDetails: z.string().optional(),
-		cashConversionCycleDuration: z.string().optional(),
-		workingCapitalUsagePlan: z.string().optional(),
-		currentTermsOfDebt: z.string().optional(),
-		improvementsOrChanges: z.string().optional(),
-		purposeOfRefinancing: z.string().optional(),
-		penaltiesOrFees: z.string().optional(),
-		securityOrCollateral: z.string().optional(),
-		projectBudgetRange: z.string().optional()
+	assetValue: z.string().optional(),
+	priorFinancing: z.string().optional(),
+	assetValuationDetails: z.string().optional(),
+	assetLife: z.string().optional(),
+	purchasePrice: z.string().optional(),
+	LTV: z.string().optional(),
+	intendedUse: z.string().optional(),
+	anticipatedRentalIncome: z.string().optional(),
+	maintenanceRequirements: z.string().optional(),
+	currentWorkingCapitalNeeds: z.string().optional(),
+	currentWorkingCapitalNeedsDetails: z.string().optional(),
+	accountsReceivablePayableDetails: z.string().optional(),
+	cashConversionCycleDuration: z.string().optional(),
+	workingCapitalUsagePlan: z.string().optional(),
+	currentTermsOfDebt: z.string().optional(),
+	improvementsOrChanges: z.string().optional(),
+	purposeOfRefinancing: z.string().optional(),
+	penaltiesOrFees: z.string().optional(),
+	securityOrCollateral: z.string().optional(),
+	projectBudgetRange: z.string().optional()
 
 });
 
@@ -255,36 +263,36 @@ export function Form() {
 		}
 
 		const values = methods.getValues();
+		console.log("currentStep", currentStep);
 		const selectedPurpose = values.purposeOfTheLoan;
 		console.log("values", values);
-		console.log("selectedPurpose", selectedPurpose);
 	
-		const purposeToQuestionsMap: { [key: string]: number } = {
-			"Asset finance": 0,
-			"Property purchase": 1,
-			"Working capital": 2,
-			"Refinance existing bank debt": 3,
-		};
-	
-		const index = purposeToQuestionsMap[selectedPurpose];
-		if (index !== undefined) {
-			setConditionalComponent(conditionalQuestions[index].setOfQuestions);
-		} /* else {
-			setCurrentStep((step) => step + 1);
-		} */
+		const selectedQuestions = conditionalQuestions.find(item => item.purpose === selectedPurpose);
+		console.log("selectedQuestions", selectedQuestions);
 
-	
+		if (selectedQuestions) {
+			setConditionalComponent(selectedQuestions.setOfQuestions);
+		} else {
+			setConditionalComponent([]);
+			if (currentStep === 3) {
+				setCurrentStep((step) => step + 1);
+			}
+		}
+
 	}
 
 	function previousStep() {
 		if (currentStep > 0) {
 			setCurrentStep((step) => step - 1);
 		}
+		console.log("currentStep", currentStep);
+		console.log("conditionalComponent", conditionalComponent);
+
+ 		if (conditionalComponent.length === 0 && currentStep === 5) {
+			setCurrentStep(3);
+		} 
 	}
 
-	/* function handleSelectChange(event: React.ChangeEvent<HTMLSelectElement>) {
-        setSelectedValue(event.target.value);
-    } */
 
 	return (
 		<div className="mt-6 flex flex-col items-center justify-center gap-3 p-8 text-center">
@@ -313,10 +321,10 @@ export function Form() {
 						<div
 							className={twMerge(
 								"mt-8 text-left",
-								currentStep === 5 && "flex flex-col items-center gap-2",
+								currentStep === 6 && "flex flex-col items-center gap-2",
 							)}
 						>
-							{currentStep === 5 && (
+							{currentStep === 6 && (
 								<Image
 									src="/finish.svg"
 									alt="Finish"
@@ -332,13 +340,13 @@ export function Form() {
 							<p
 								className={twMerge(
 									"mt-2 text-zinc-500 max-w-[500px] text-left",
-									currentStep === 5 && "text-center",
+									currentStep === 6 && "text-center",
 								)}
 							>
 								{steps[currentStep].description}
 							</p>
 
-							{currentStep === 5 && (
+							{currentStep === 6 && (
 								<button
 									type="button"
 									onClick={nextStep}
