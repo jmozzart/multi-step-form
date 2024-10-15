@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import {
   FileUploaderRegular,
+  FileUploaderInline,
+  FileUploaderMinimal,
   OutputFileEntry,
   UploadCtxProvider,
 } from '@uploadcare/react-uploader';
@@ -9,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 
 
 export const UploadcareUploader = () => {
-    const { setValue } = useFormContext();
+    const { setValue, getValues } = useFormContext();
   const [files, setFiles] = useState<OutputFileEntry[]>([]);
   const uploaderRef = useRef<InstanceType<UploadCtxProvider> | null>(null);
   const [fileUrls, setFileUrls] = useState<string[]>([]);
@@ -20,12 +22,17 @@ export const UploadcareUploader = () => {
     const newFileUrls = [...fileUrls, file.cdnUrl as string];
     setFileUrls(newFileUrls);
     setValue("uploadedFiles", newFileUrls);
-
+    console.log("getValues",getValues());
   };
 
   return (
     <section>
-      <FileUploaderRegular
+ {/*      <FileUploaderRegular
+        pubkey="fb60afc0c82a00b9aa61"
+        apiRef={uploaderRef}
+        onFileUploadSuccess={handleFileUpload}
+        /> */}
+        <FileUploaderMinimal
         pubkey="fb60afc0c82a00b9aa61"
         apiRef={uploaderRef}
         onFileUploadSuccess={handleFileUpload}
