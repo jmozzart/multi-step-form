@@ -1,7 +1,5 @@
 import React, { useRef, useState } from 'react';
 import {
-  FileUploaderRegular,
-  FileUploaderInline,
   FileUploaderMinimal,
   OutputFileEntry,
   UploadCtxProvider,
@@ -27,11 +25,6 @@ export const UploadcareUploader = () => {
 
   return (
     <section>
- {/*      <FileUploaderRegular
-        pubkey="fb60afc0c82a00b9aa61"
-        apiRef={uploaderRef}
-        onFileUploadSuccess={handleFileUpload}
-        /> */}
         <FileUploaderMinimal
         pubkey="fb60afc0c82a00b9aa61"
         apiRef={uploaderRef}
