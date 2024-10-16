@@ -34,3 +34,7 @@ body {
 uc-copyright {
   display: none !important;
 }
+
+.uc-remove-btn {
+  display: none !important;
+}

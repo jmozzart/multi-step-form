@@ -11,23 +11,25 @@ import {
 import '@uploadcare/react-uploader/core.css';
 import { useFormContext } from "react-hook-form";
 import { X } from 'lucide-react';
+import  FileItem from './file-item';
 
 
 export const UploadcareUploader = () => {
     const { setValue, getValues } = useFormContext();
-  const [files, setFiles] = useState<OutputFileEntry[]>([]);
+ // const [files, setFiles] = useState<OutputFileEntry[]>([]);
   const uploaderRef = useRef<InstanceType<UploadCtxProvider> | null>(null);
 
- //const [fileUploads, setFileUploads] = useState<any[]>([]);
+  const [isVisible, setIsVisible] = useState(true);
+
   defineLocale('en', {
     'choose-file': getValues("fileUploads") ? "Upload Another File" : "Choose File",
   })
 
 
   const handleFileUpload = (file: OutputFileEntry) => {
-    setFiles((prevFiles) => [...prevFiles, file]);
+ 
     console.log("fileupload success",file);
-    //console.log()
+   
     const prevArray = getValues("fileUploads") ?? []
 
     const newFileUploads = [...prevArray, {
@@ -39,14 +41,12 @@ export const UploadcareUploader = () => {
 
     setValue("fileUploads", newFileUploads);
     setValue("uploadButtonHit", false);
-    //console.log("getValues",getValues());
+
   };
 
   const handleFileRemove = (file: OutputFileEntry) => {
     console.log("file removed")
-    setFiles((prevFiles) =>
-      prevFiles.filter((prevFile) => prevFile.uuid !== file.uuid)
-    );
+   
     const prevFileUploadsArr = getValues("fileUploads") ?? []
     const newFileUploads = prevFileUploadsArr.filter((f: any) => f.uuid !== file.uuid);
 
@@ -68,27 +68,31 @@ export const UploadcareUploader = () => {
     const prevFileUploadsArr = getValues("fileUploads") ?? []
     const newFileUploads = prevFileUploadsArr.filter((f: any) => f.uuid !== uuid);
     setValue("fileUploads", newFileUploads);
+    setIsVisible(false);
   };
 
-/*   const handleRemove = (file: OutputFileEntry, event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    handleFileRemove(file);
-  };
- */
+
 
   return (
     <section>
         <FileUploaderMinimal
           pubkey="fb60afc0c82a00b9aa61"
           apiRef={uploaderRef}
-          //onChange={handleChanges}
-         //onFileAdded={handleUpdateUploadHit("file has been added", true)}
-        //onFileUploadStart={handleUpdateUploadHit("file upload in progress", true)}
-        //onFileUploadProgress={handleUpdateUploadHit("file upload in progress", true)}
-          //onFileUploadFailed={handleUpdateUploadHit("file upload failed", true)}
+          onChange={
+            (collection: OutputCollectionState) => {
+              console.log("collection on Change", collection);
+              if (collection.isUploading === false) {
+                setValue("uploadButtonHit", false);
+              } else {
+                setValue("uploadButtonHit", true);
+              }
+              return undefined;
+            }
+          }
+
           onFileUploadSuccess={handleFileUpload}
             onFileRemoved={handleFileRemove}
-            collectionValidators={
+         /*    collectionValidators={
               [
                 (collection) => {
                   console.log("collection", collection);
@@ -102,12 +106,10 @@ export const UploadcareUploader = () => {
                 }
                   
               ]
-            } 
+            }  */
           store={false}
           fileValidators={[  
-            (file) => {
-              console.log("filepayload",file)
-                
+            (file) => { 
                 const acceptedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
                 if (acceptedTypes.includes(file.mimeType)) {
                   return undefined;
@@ -120,23 +122,13 @@ export const UploadcareUploader = () => {
               }
         ]}
         />
+        
  <div className="mt-6">
         {getValues("fileUploads") && (
           <ul className="list-disc list-inside">
             {getValues("fileUploads").length > 0 ? (
               getValues("fileUploads").map((file: any) => (
-                <li key={file.uuid} className="flex items-center justify-between">
-                  <a href={file.fileUrl as string} target="_blank" rel="noreferrer" className="text-blue-500 hover:underline">
-                    {file.fileName}
-                  </a>
-                  <button
-                    onClick={(event) => handleRemove(file.uuid, event)}
-                    className="ml-2 text-red-500 hover:text-red-700"
-                    aria-label="Remove file"
-                  >
-                    <X size={16} />
-                  </button>
-                </li>
+                <FileItem key={file.uuid} file={file} handleRemove={handleRemove} />
               ))
             ) : (
               <li className="text-gray-500">No files uploaded</li>

@@ -244,6 +244,13 @@ export function Form() {
 		mode: "onBlur",
 	});
 
+	// setTimeout( () => {
+		const invalidGreyOut = methods.watch("uploadButtonHit")
+		
+		//console.log("watch isValid", isValid);
+//}, 500);
+ 
+
 
 	async function onSubmit(data: FormSchema) {
 		console.log(data);
@@ -399,7 +406,9 @@ export function Form() {
 							<button
 								type="button"
 								onClick={previousStep}
-								className="px-10 py-3 bg-transparent cursor-pointer text-indigo-600 border-[1px] border-indigo-600 rounded-[66px] hover:bg-indigo-600 hover:text-white transition-colors duration-100"
+								disabled={invalidGreyOut}
+								className="px-10 py-3 bg-transparent cursor-pointer text-indigo-600 border-[1px] border-indigo-600 rounded-[66px] hover:bg-indigo-600 hover:text-white transition-colors duration-100
+								disabled:bg-transparent disabled:border-[1px] disabled:border-zinc-200 disabled:text-zinc-400 disabled:cursor-not-allowed "
 							>
 								Previous Step
 							</button>
@@ -411,6 +420,7 @@ export function Form() {
 							<button
 								type="button"
 								onClick={nextStep}
+								disabled={invalidGreyOut}
 								className="px-10 py-3 bg-indigo-600 text-white rounded-[66px] hover:bg-indigo-700 transition-colors duration-100
 								disabled:bg-transparent disabled:border-[1px] disabled:border-zinc-200 disabled:text-zinc-400 disabled:cursor-not-allowed 
 							"
