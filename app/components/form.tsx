@@ -62,7 +62,7 @@ const steps = [
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
 		component: <UploadcareUploader />,
-		fields: ["uploadedFiles", "fileUploads"],
+		fields: ["uploadButtonHit", "fileUploads"],
 
 	},
 	
@@ -120,7 +120,7 @@ const formSchema = z.object({
 	penaltiesOrFees: z.string().optional(),
 	securityOrCollateral: z.string().optional(),
 	projectBudgetRange: z.string().optional(),
-	//uploadButtonHit: z.boolean(),
+	uploadButtonHit: z.literal(false).default(false),
  	fileUploads: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string(),
@@ -237,6 +237,7 @@ export type FormSchema = z.infer<typeof formSchema>;
 export function Form() {
 	const [currentStep, setCurrentStep] = useState(0);
 	const [conditionalComponent, setConditionalComponent] = useState<ConditionalComponentProps[]>([]);
+	//const [invalidGreyOut, setGreyOut] = useState(false)
 
 	const methods = useForm<FormSchema>({
 		resolver: zodResolver(formSchema),
