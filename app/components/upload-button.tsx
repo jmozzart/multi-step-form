@@ -2,6 +2,7 @@
 import React, { useRef, useState } from 'react';
 import {
   FileUploaderMinimal,
+  FileUploaderRegular,
   FuncCollectionValidator,
   OutputCollectionState,
   OutputFileEntry,
@@ -75,7 +76,7 @@ export const UploadcareUploader = () => {
 
   return (
     <section>
-        <FileUploaderMinimal
+         <FileUploaderMinimal
           pubkey="fb60afc0c82a00b9aa61"
           apiRef={uploaderRef}
           onChange={
@@ -92,24 +93,22 @@ export const UploadcareUploader = () => {
 
           onFileUploadSuccess={handleFileUpload}
             onFileRemoved={handleFileRemove}
-         /*    collectionValidators={
+           /*  collectionValidators={ // Contains allEntries and failedEntries which are array of file objects which can be used to validate the collection
               [
-                (collection) => {
+                (collection: OutputCollectionState) => {
                   console.log("collection", collection);
-                  if (collection.failedCount === 0 || collection.failedCount == 0) {
-                    setValue("uploadButtonHit", false);
-                  } else {
-                    setValue("uploadButtonHit", true);
+                  if (collection.status !== 'failed') {
+                    return {
+                      //name: 'Testse',
+                      message: 'dsfsdf',
+                    };
                   }
-
-                  return undefined; // Ensure the function returns undefined
                 }
-                  
               ]
             }  */
           store={false}
           fileValidators={[  
-            (file) => { 
+            (file ) => { 
                 const acceptedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
                 if (acceptedTypes.includes(file.mimeType)) {
                   return undefined;
