@@ -15,6 +15,7 @@ import Image from "next/image";
 //import {UploadcareUploader} from "./upload-button";
 import BlobUploads from "./vercel-blob-upload";
 import axios from "axios";
+import StepSix from "./step-six";
 
 interface ConditionalComponentMappedProps {
 	purpose: string;
@@ -62,7 +63,7 @@ const steps = [
 		title: "Upload your documents",
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
-		component: <BlobUploads schemaField="fileUploads" />,
+		component: <StepSix />,//<BlobUploads schemaField="fileUploads" />,
 		fields: ["uploadButtonHit", "fileUploads"],
 
 	},
@@ -122,14 +123,23 @@ const formSchema = z.object({
 	securityOrCollateral: z.string().optional(),
 	projectBudgetRange: z.string().optional(),
 	uploadButtonHit: z.literal(false).default(false),
-	fileUploads: z.array(z.object({
+	existing_paper: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string()
 	})).optional(),
-	fileUploads2: z.array(z.object({
+	financial: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string()
-	})).optional()
+	})).optional(),
+	non_financial: z.array(z.object({
+		fileName: z.string(),
+		fileUrl: z.string()
+	})).optional(),
+	industry_documents: z.array(z.object({
+		fileName: z.string(),
+		fileUrl: z.string()
+	})).optional(),
+
 
 });
 
