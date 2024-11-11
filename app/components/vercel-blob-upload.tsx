@@ -6,14 +6,20 @@ import { useState, useRef } from 'react';
 import { useFormContext } from "react-hook-form";
 import FileItem from './file-item';
 
-export default function Uploader() {
+interface UploaderProps {
+    schemaField: string;
+}
+
+export default function Uploader({
+    schemaField,
+}: UploaderProps) {
     const { setValue, getValues } = useFormContext();
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [blobs, setBlobs] = useState<PutBlobResult[]>([]);
 
 
     const [isVisible, setIsVisible] = useState(true);
-    const [uploadProgress, setUploadProgress] = useState(50);
+    const [uploadProgress, setUploadProgress] = useState(0);
 
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +35,7 @@ export default function Uploader() {
                 multipart: true,
                 onUploadProgress: (progress) => {
                     setUploadProgress(progress.percentage);
-                    console.log('Upload progress:', progress.percentage);
+                    //console.log('Upload progress:', progress.percentage);
                 }
             })
         );

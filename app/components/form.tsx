@@ -48,7 +48,7 @@ const steps = [
 		id: 4,
 		title: "Purpose of the loan",
 		description: "Please select the purpose of the loan.",
-		component: <StepFour/>,
+		component: <StepFour />,
 		fields: ["purposeOfTheLoan"],
 	},
 	{
@@ -62,11 +62,11 @@ const steps = [
 		title: "Upload your documents",
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
-		component: <BlobUploads />,
+		component: <BlobUploads schemaField="fileUploads" />,
 		fields: ["uploadButtonHit", "fileUploads"],
 
 	},
-	
+
 	{
 		id: 7,
 		title: "Submit your quote request",
@@ -122,14 +122,18 @@ const formSchema = z.object({
 	securityOrCollateral: z.string().optional(),
 	projectBudgetRange: z.string().optional(),
 	uploadButtonHit: z.literal(false).default(false),
- 	fileUploads: z.array(z.object({
+	fileUploads: z.array(z.object({
+		fileName: z.string(),
+		fileUrl: z.string()
+	})).optional(),
+	fileUploads2: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string()
 	})).optional()
 
 });
 
-const conditionalQuestions:ConditionalComponentMappedProps[] = [
+const conditionalQuestions: ConditionalComponentMappedProps[] = [
 	{
 		purpose: "Asset finance",
 		setOfQuestions: [
@@ -153,7 +157,7 @@ const conditionalQuestions:ConditionalComponentMappedProps[] = [
 				questionName: "assetLife",
 				questionLabel: "What is the life of the asset: How long do you intend to use the asset, and what is its expected useful life?"
 			}
-		]	
+		]
 	},
 	{
 		purpose: "Property purchase",
@@ -245,18 +249,18 @@ export function Form() {
 	});
 
 	// setTimeout( () => {
-		const invalidGreyOut = methods.watch("uploadButtonHit")
-		
-		//console.log("watch isValid", isValid);
-//}, 500);
- 
+	const invalidGreyOut = methods.watch("uploadButtonHit")
+
+	//console.log("watch isValid", isValid);
+	//}, 500);
+
 
 
 	async function onSubmit(data: FormSchema) {
 		console.log(data);
 		methods.reset();
 	}
-	
+
 	async function finalSubmit() {
 		const data = methods.getValues();
 
@@ -264,7 +268,7 @@ export function Form() {
 		console.log("final data", data);
 		await axios.post("https://eogsyrgf2tjbnoi.m.pipedream.net", data);
 		methods.reset();
-		
+
 	}
 
 	async function nextStep() {
@@ -272,9 +276,9 @@ export function Form() {
 		const isValid = await methods.trigger(fields as (keyof FormSchema)[], {
 			shouldFocus: true,
 		});
-	/* 	const isValid = await methods.trigger(fields as FieldName<FormSchema>[], {
-			shouldFocus: true,
-		}); */
+		/* 	const isValid = await methods.trigger(fields as FieldName<FormSchema>[], {
+				shouldFocus: true,
+			}); */
 
 		if (!isValid) return;
 
@@ -287,14 +291,14 @@ export function Form() {
 				setCurrentStep((step) => step + 1);
 			}
 
-	
+
 		}
 
 		const values = methods.getValues();
 		console.log("currentStep", currentStep);
 		const selectedPurpose = values.purposeOfTheLoan;
 		console.log("values", values);
-	
+
 		const selectedQuestions = conditionalQuestions.find(item => item.purpose === selectedPurpose);
 		console.log("selectedQuestions", selectedQuestions);
 
@@ -316,9 +320,9 @@ export function Form() {
 		console.log("currentStep", currentStep);
 		console.log("conditionalComponent", conditionalComponent);
 
- 		if (conditionalComponent.length === 0 && currentStep === 5) {
+		if (conditionalComponent.length === 0 && currentStep === 5) {
 			setCurrentStep(3);
-		} 
+		}
 	}
 
 
@@ -382,22 +386,22 @@ export function Form() {
 									Submit
 								</button>
 							)}
-					
+
 
 							{currentStep === 4 ? (
 
 								<div className="flex flex-col gap-11 mt-10">
-								<ConditionalComponent items={conditionalComponent} />
+									<ConditionalComponent items={conditionalComponent} />
 								</div>
-					
-							) : 
+
+							) :
 
 								<div className="flex flex-col gap-11 mt-10">
-								{steps[currentStep].component}
+									{steps[currentStep].component}
 								</div>
-							 }
+							}
 
-					
+
 						</div>
 					</section>
 
