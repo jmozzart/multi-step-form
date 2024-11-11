@@ -12,7 +12,8 @@ import { StepFour } from "./step-four";
 import { ConditionalComponent, ConditionalComponentProps } from "./step-conditional";
 import { twMerge } from "tailwind-merge";
 import Image from "next/image";
-import {UploadcareUploader} from "./upload-button";
+//import {UploadcareUploader} from "./upload-button";
+import BlobUploads from "./vercel-blob-upload";
 import axios from "axios";
 
 interface ConditionalComponentMappedProps {
@@ -61,7 +62,7 @@ const steps = [
 		title: "Upload your documents",
 		description:
 			"Please upload any relevant documents that will help us understand your project better.",
-		component: <UploadcareUploader />,
+		component: <BlobUploads />,
 		fields: ["uploadButtonHit", "fileUploads"],
 
 	},
@@ -123,8 +124,7 @@ const formSchema = z.object({
 	uploadButtonHit: z.literal(false).default(false),
  	fileUploads: z.array(z.object({
 		fileName: z.string(),
-		fileUrl: z.string(),
-		uuid: z.string()
+		fileUrl: z.string()
 	})).optional()
 
 });
