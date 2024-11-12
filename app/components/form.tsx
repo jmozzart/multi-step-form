@@ -138,7 +138,7 @@ const formSchema = z.object({
 	industry_documents: z.array(z.object({
 		fileName: z.string(),
 		fileUrl: z.string()
-	})).optional(),
+	})).optional()
 
 
 });

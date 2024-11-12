@@ -16,6 +16,7 @@
 		"@hookform/resolvers": "^3.9.0",
 		"@uploadcare/react-uploader": "^1.1.0",
 		"@vercel/blob": "^0.26.0",
+		"@vercel/postgres": "^0.10.0",
 		"axios": "^1.7.7",
 		"lucide-react": "^0.416.0",
 		"next": "14.2.10",
